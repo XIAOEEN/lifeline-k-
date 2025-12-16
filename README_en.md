@@ -31,7 +31,9 @@ Life K-Line is an innovative destiny analysis application that combines traditio
 
 <div align="center">
 
-**Homepage**
+**Official Landing Page**
+
+When you first visit the application, you'll see an elegant landing page showcasing core features and product highlights.
 
 <img src="doc/首页.png" alt="Homepage" width="800"/>
 
@@ -47,6 +49,7 @@ Life K-Line is an innovative destiny analysis application that combines traditio
 
 ## ✨ Key Features
 
+- **Official Landing Page**: Elegant landing page showcasing product features and core capabilities
 - **Smart BaZi Charting**: Automatic calculation of true solar time and lunar dates
 - **AI Destiny Analysis**: Detailed life fortune reports powered by Gemini AI
 - **K-Line Visualization**: 100-year fortune displayed as financial candlesticks

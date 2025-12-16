@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import LandingPage from './components/LandingPage';
 import InputForm from './components/InputForm';
 import BaZiDisplay from './components/BaZiDisplay';
 import BaZiConfirmation from './components/BaZiConfirmation';
@@ -6,22 +7,25 @@ import KLineChart from './components/KLineChart';
 import AnalysisSection from './components/AnalysisSection';
 import { UserInput, AnalysisResult, Language, BaZiResult } from './types';
 import { calculateBaZi, generateDestinyAnalysis } from './services/geminiService';
-import { Sparkles, Languages, Moon, Sun, Github } from 'lucide-react';
+import { Sparkles, Languages, Moon, Sun } from 'lucide-react';
+import { Github } from 'lucide-react';
 import { getTexts } from './locales';
 
 const App: React.FC = () => {
-  const [step, setStep] = useState<'input' | 'confirmation' | 'result'>('input');
+  const [step, setStep] = useState<'landing' | 'input' | 'confirmation' | 'result'>('landing');
   const [loading, setLoading] = useState(false);
   
   // Theme State
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme');
-      return (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) 
-        ? 'dark' 
-        : 'light';
+      // Default to dark theme if no saved preference
+      if (savedTheme) {
+        return savedTheme as 'light' | 'dark';
+      }
+      return 'dark';
     }
-    return 'light';
+    return 'dark';
   });
 
   const [lang, setLang] = useState<Language>('zh'); 
@@ -81,11 +85,70 @@ const App: React.FC = () => {
   };
 
   const handleReset = () => {
-    setStep('input');
+    setStep('landing');
     setPreliminaryBaZi(null);
     setAnalysis(null);
     window.scrollTo(0, 0);
   };
+
+  const handleGetStarted = () => {
+    setStep('input');
+    window.scrollTo(0, 0);
+  };
+
+  // Show landing page without header
+  if (step === 'landing') {
+    return (
+      <div className="min-h-screen bg-slate-900 font-sans">
+        {/* Minimal Header for Landing */}
+        <header className="bg-slate-900/80 backdrop-blur-lg border-b border-slate-800 sticky top-0 z-40">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="bg-teal-500 text-white p-1.5 rounded-lg">
+                  <Sparkles size={18} />
+              </div>
+              <div>
+                  <h1 className="font-bold text-white text-lg leading-none">{t.appTitle}</h1>
+                  <p className="text-[10px] text-gray-400 font-medium tracking-wider uppercase">AI Destiny Analysis</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+               {/* GitHub Link */}
+               <a
+                  href="https://github.com/XIAOEEN/lifeline-k-"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-slate-800 text-gray-300 hover:bg-slate-700 transition-colors"
+                  title="View on GitHub"
+               >
+                  <Github size={16} />
+               </a>
+
+               {/* Theme Toggle */}
+               <button
+                  onClick={toggleTheme}
+                  className="p-2 rounded-full bg-slate-800 text-gray-300 hover:bg-slate-700 transition-colors"
+                  title={theme === 'light' ? "Switch to Dark Mode" : "Switch to Light Mode"}
+               >
+                  {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+               </button>
+
+               <button
+                  onClick={toggleLanguage}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-gray-200 text-xs font-medium transition-colors"
+               >
+                  <Languages size={14} />
+                  {lang === 'en' ? '中文' : 'English'}
+               </button>
+            </div>
+          </div>
+        </header>
+
+        <LandingPage onGetStarted={handleGetStarted} lang={lang} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900 flex flex-col font-sans transition-colors duration-200">
