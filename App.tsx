@@ -65,13 +65,8 @@ const App: React.FC = () => {
       setStep('confirmation');
     } catch (error: any) {
       console.error(error);
-
-      // Check if it's a quota exhausted error
-      if (error.message === 'QUOTA_EXHAUSTED') {
-        setShowQuotaDialog(true);
-      } else {
-        alert('Failed to calculate BaZi. Please try again.');
-      }
+      // Show quota dialog for all API errors
+      setShowQuotaDialog(true);
     } finally {
       setLoading(false);
     }
@@ -86,13 +81,8 @@ const App: React.FC = () => {
       setStep('result');
     } catch (error: any) {
       console.error(error);
-
-      // Check if it's a quota exhausted error
-      if (error.message === 'QUOTA_EXHAUSTED') {
-        setShowQuotaDialog(true);
-      } else {
-        alert('Failed to generate analysis. Please try again.');
-      }
+      // Show quota dialog for all API errors
+      setShowQuotaDialog(true);
     } finally {
       setLoading(false);
     }
