@@ -211,6 +211,17 @@ VITE_BASE_URL=https://api.gpt.ge/v1/
 3. API 调用会产生费用，请注意用量
 4. 真太阳时计算基于地理位置，可能存在误差
 
+
+## 📈 项目统计
+
+<a href="https://star-history.com/#666ghj/BettaFish&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=XIAOEEN/lifeline-k-&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=XIAOEEN/lifeline-k-&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=XIAOEEN/lifeline-k-&type=Date" />
+  </picture>
+</a>
+
 ## 📄 License
 
 MIT License

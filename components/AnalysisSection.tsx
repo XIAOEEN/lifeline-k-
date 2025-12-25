@@ -53,6 +53,11 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ analysis, lang, theme
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   
   const handleDownloadPDF = async () => {
+    let hadDarkClass = false;
+    let hadPdfCaptureClass = false;
+    let originalBodyBg = '';
+    const scrollableAdjustments: { el: HTMLElement, maxHeight: string, overflowY: string, height: string, paddingRight: string }[] = [];
+
     setIsGeneratingPdf(true);
     try {
         // Find the main content div
@@ -61,15 +66,42 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ analysis, lang, theme
 
         // Temporarily remove dark mode class from html element to force light theme for PDF
         const htmlElement = document.documentElement;
-        const hadDarkClass = htmlElement.classList.contains('dark');
+        const bodyElement = document.body;
+        hadPdfCaptureClass = htmlElement.classList.contains('pdf-capture-mode');
+        hadDarkClass = htmlElement.classList.contains('dark');
         if (hadDarkClass) {
             htmlElement.classList.remove('dark');
-            // Wait for CSS transitions to complete
-            await new Promise(resolve => setTimeout(resolve, 100));
         }
 
+        // Disable transitions/animations during capture to avoid partially rendered frames
+        htmlElement.classList.add('pdf-capture-mode');
+
+        // Ensure a solid white background while capturing
+        originalBodyBg = bodyElement.style.backgroundColor;
+        bodyElement.style.backgroundColor = '#ffffff';
+
+        // Expand scrollable sections (e.g., yearly review list) so all content is captured
+        const scrollables = Array.from(element.querySelectorAll('.custom-scrollbar')) as HTMLElement[];
+        scrollables.forEach((el) => {
+            scrollableAdjustments.push({
+                el,
+                maxHeight: el.style.maxHeight,
+                overflowY: el.style.overflowY,
+                height: el.style.height,
+                paddingRight: el.style.paddingRight,
+            });
+            el.style.maxHeight = 'none';
+            el.style.overflowY = 'visible';
+            el.style.height = 'auto';
+            el.style.paddingRight = '0';
+            el.scrollTop = 0;
+        });
+
+        // Wait for CSS transitions to complete fully
+        await new Promise(resolve => setTimeout(resolve, 250));
+
         const canvas = await html2canvas(element as HTMLElement, {
-            scale: 2, // Higher resolution
+            scale: window.devicePixelRatio > 2 ? 2 : window.devicePixelRatio || 2, // Higher resolution but capped
             useCORS: true, // Handle external images if any
             backgroundColor: '#ffffff', // Always use white background for PDF
             logging: false,
@@ -80,11 +112,6 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ analysis, lang, theme
                        (el.tagName === 'DIV' && el.style.position === 'fixed' && el.style.zIndex === '9999');
             }
         });
-
-        // Restore dark mode if it was enabled
-        if (hadDarkClass) {
-            htmlElement.classList.add('dark');
-        }
 
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF({
@@ -116,6 +143,23 @@ const AnalysisSection: React.FC<AnalysisSectionProps> = ({ analysis, lang, theme
         console.error("PDF Generation failed", error);
         alert("Failed to generate PDF. You can try printing the page.");
     } finally {
+        const htmlElement = document.documentElement;
+        const bodyElement = document.body;
+        // Restore dark mode if it was enabled
+        if (hadDarkClass) {
+            htmlElement.classList.add('dark');
+        }
+        // Restore pdf capture related changes
+        if (!hadPdfCaptureClass) {
+            htmlElement.classList.remove('pdf-capture-mode');
+        }
+        bodyElement.style.backgroundColor = originalBodyBg;
+        scrollableAdjustments.forEach(({ el, maxHeight, overflowY, height, paddingRight }) => {
+            el.style.maxHeight = maxHeight;
+            el.style.overflowY = overflowY;
+            el.style.height = height;
+            el.style.paddingRight = paddingRight;
+        });
         setIsGeneratingPdf(false);
     }
   };

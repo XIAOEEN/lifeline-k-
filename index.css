@@ -43,3 +43,9 @@
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* Disable animations/transitions during PDF capture to avoid faded frames */
+.pdf-capture-mode, .pdf-capture-mode * {
+  animation: none !important;
+  transition: none !important;
+}
