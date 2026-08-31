@@ -214,13 +214,11 @@ VITE_BASE_URL=https://api.gpt.ge/v1/
 
 ## 📈 项目统计
 
-<a href="https://star-history.com/#666ghj/BettaFish&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=XIAOEEN/lifeline-k-&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=XIAOEEN/lifeline-k-&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=XIAOEEN/lifeline-k-&type=Date" />
-  </picture>
-</a>
+<p align="center">
+  <a href="https://github.com/XIAOEEN/lifeline-k-">
+    <img alt="GitHub Stars" src="https://img.shields.io/github/stars/XIAOEEN/lifeline-k-?style=for-the-badge&logo=github&label=Stars" />
+  </a>
+</p>
 
 ## 📄 License
 
